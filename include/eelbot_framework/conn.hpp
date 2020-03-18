@@ -1,0 +1,6 @@
+#ifndef EELBOT_FRAMEWORK_CONN
+#define EELBOT_FRAMEWORK_CONN
+
+// TODO
+
+#endif
