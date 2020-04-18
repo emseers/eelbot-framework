@@ -35,13 +35,11 @@ file(GLOB_RECURSE EF_SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 #===============================================================================
 add_library(${EF_LIB_NAME} ${EF_SOURCES})
 set_target_properties(${EF_LIB_NAME} PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	PUBLIC_HEADER ${EF_HEADERS})
+	VERSION ${PROJECT_VERSION})
 target_include_directories(${EF_LIB_NAME} PRIVATE ${EF_INCLUDE_DIRS})
 
 #===============================================================================
 # Installation
 #===============================================================================
-install(TARGETS ${EF_LIB_NAME}
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${EF_LIB_NAME})
+install(TARGETS ${EF_LIB_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(FILES ${EF_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${EF_LIB_NAME})
