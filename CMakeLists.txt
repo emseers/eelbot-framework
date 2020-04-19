@@ -20,8 +20,8 @@ include(GNUInstallDirs)
 # Include directories and files
 #===============================================================================
 set(EF_INCLUDE_DIRS
-	${PROJECT_SOURCE_DIR}/include
-	${PROJECT_SOURCE_DIR}/3rdparty/asio/asio/include
+  ${PROJECT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/3rdparty/asio/asio/include
 )
 file(GLOB_RECURSE EF_HEADERS RELATIVE "${PROJECT_SOURCE_DIR}/" "include/*.h*")
 
@@ -35,7 +35,7 @@ file(GLOB_RECURSE EF_SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 #===============================================================================
 add_library(${EF_LIB_NAME} ${EF_SOURCES})
 set_target_properties(${EF_LIB_NAME} PROPERTIES
-	VERSION ${PROJECT_VERSION})
+  VERSION ${PROJECT_VERSION})
 target_include_directories(${EF_LIB_NAME} PRIVATE ${EF_INCLUDE_DIRS})
 
 #===============================================================================
