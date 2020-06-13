@@ -1,10 +1,16 @@
-BasedOnStyle: Google
-ColumnLimit: 100
+Language: Cpp
+
+BasedOnStyle: LLVM
+Standard: Cpp11
+ColumnLimit: 120
+UseTab: ForIndentation
 Cpp11BracedListStyle: true
-IndentWidth: 2
+IndentWidth: 4
+TabWidth: 4
+BreakBeforeBraces: Attach
+IndentCaseLabels: false
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
 SpaceBeforeAssignmentOperators: true
-Standard: Cpp11
-UseTab: Never
 AllowShortFunctionsOnASingleLine: false
+AccessModifierOffset: -4

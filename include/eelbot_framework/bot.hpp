@@ -4,13 +4,13 @@
 namespace eelbot_framework {
 
 class bot {
- private:
-  /* data */
- public:
-  bot() = default;
-  ~bot() = default;
+private:
+	/* data */
+public:
+	bot() = default;
+	~bot() = default;
 };
 
-}  // namespace eelbot_framework
+} // namespace eelbot_framework
 
 #endif

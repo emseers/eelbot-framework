@@ -4,13 +4,13 @@
 namespace eelbot_framework {
 
 class conn {
- private:
-  /* data */
- public:
-  conn() = default;
-  ~conn() = default;
+private:
+	/* data */
+public:
+	conn() = default;
+	~conn() = default;
 };
 
-}  // namespace eelbot_framework
+} // namespace eelbot_framework
 
 #endif
