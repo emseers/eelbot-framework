@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.15)
 
 #===============================================================================
 # Project information
@@ -10,6 +10,9 @@ project(${EF_LIB_NAME} VERSION 0.0.1 LANGUAGES CXX)
 # Options
 #===============================================================================
 option(VERBOSE "" OFF)
+option(BUILD_SHARED_LIBS 0)
+option(BUILD_TESTS OFF)
+option(BUILD_SAMPLES OFF)
 
 #===============================================================================
 # Dependencies
@@ -17,17 +20,11 @@ option(VERBOSE "" OFF)
 include(GNUInstallDirs)
 
 #===============================================================================
-# Third party dependencies
-#===============================================================================
-
-
-#===============================================================================
 # Include directories and files
 #===============================================================================
 set(EF_INCLUDE_DIRS
 	${PROJECT_SOURCE_DIR}/include
-	${PROJECT_SOURCE_DIR}/3rdparty/asio/include
-	${PROJECT_SOURCE_DIR}/3rdparty/websocketpp
+	${PROJECT_SOURCE_DIR}/src
 )
 file(GLOB_RECURSE EF_HEADERS RELATIVE "${PROJECT_SOURCE_DIR}/" "include/*.h*")
 
@@ -35,8 +32,13 @@ file(GLOB_RECURSE EF_HEADERS RELATIVE "${PROJECT_SOURCE_DIR}/" "include/*.h*")
 # Link Libraries
 #===============================================================================
 set(EF_LINK_LIBS
-	
+	cpprest
 )
+
+#===============================================================================
+# Third party dependencies
+#===============================================================================
+add_subdirectory(3rdparty/cpprestsdk)
 
 #===============================================================================
 # Sources

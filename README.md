@@ -1,2 +1,3 @@
-# eelbot-framework
-A discord bot framework that's designed to be able to write extensible bots
+# Eelbot Framework
+
+Eelbot Framework is a discord bot framework that is designed for writing extensible bots.

@@ -1,8 +1,4 @@
-[submodule "3rdparty/websocketpp"]
-	path = 3rdparty/websocketpp
-	url = https://github.com/zaphoyd/websocketpp.git
-	branch = master
-[submodule "3rdparty/asio"]
-	path = 3rdparty/asio
-	url = https://github.com/boostorg/asio.git
+[submodule "3rdparty/cpprestsdk"]
+	path = 3rdparty/cpprestsdk
+	url = https://github.com/microsoft/cpprestsdk
 	branch = master
