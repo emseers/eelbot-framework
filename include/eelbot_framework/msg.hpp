@@ -1,6 +1,0 @@
-#ifndef EELBOT_FRAMEWORK_MSG
-#define EELBOT_FRAMEWORK_MSG
-
-// TODO
-
-#endif
