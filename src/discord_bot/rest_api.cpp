@@ -6,6 +6,7 @@
 #include "eelbot_framework/cpprestsdk_helpers.hpp"
 #include "eelbot_framework/discord_bot/endpoints.hpp"
 #include "eelbot_framework/json.hpp"
+#include "fmt/core.h"
 
 #include <map>
 #include <stdexcept>
@@ -17,9 +18,10 @@ namespace discord_bot {
 void check_response_status(
     const std::string &endpoint, const http_response &response, const unsigned short &expected_status_code = 200) {
 	if (response.status_code != expected_status_code) {
-		throw std::runtime_error("Got unexpected status code for HTTP request to endpoint " + endpoint +
-		                         ". Expected code: " + std::to_string(expected_status_code) +
-		                         ". Received code: " + std::to_string(response.status_code) + ".");
+		throw std::runtime_error(fmt::format(
+		    "Got unexpected status code for HTTP request to endpoint {}. Expected code: {}. Received code: {}. "
+		    "Received message: {}.",
+		    endpoint, expected_status_code, response.status_code, response.body));
 	}
 }
 

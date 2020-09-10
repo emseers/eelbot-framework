@@ -39,6 +39,7 @@ file(GLOB_RECURSE EF_HEADERS RELATIVE "${PROJECT_SOURCE_DIR}/" "include/*.h*")
 #===============================================================================
 set(EF_LINK_LIBS
 	cpprest
+	fmt
 	nlohmann_json
 )
 
@@ -46,6 +47,7 @@ set(EF_LINK_LIBS
 # Embedded dependencies
 #===============================================================================
 add_subdirectory(3rdparty/cpprestsdk)
+add_subdirectory(3rdparty/fmt)
 add_subdirectory(3rdparty/json)
 
 #===============================================================================

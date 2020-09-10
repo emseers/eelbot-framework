@@ -12,42 +12,36 @@
 namespace eelbot_framework {
 
 web::http::method get_cpprestsdk_http_method(const http_method &method) {
-	web::http::method cpprestsdk_method;
-
 	switch (method) {
 	case http_method::GET:
-		cpprestsdk_method = web::http::methods::GET;
+		return web::http::methods::GET;
 		break;
 	case http_method::HEAD:
-		cpprestsdk_method = web::http::methods::HEAD;
+		return web::http::methods::HEAD;
 		break;
 	case http_method::POST:
-		cpprestsdk_method = web::http::methods::POST;
+		return web::http::methods::POST;
 		break;
 	case http_method::PUT:
-		cpprestsdk_method = web::http::methods::PUT;
+		return web::http::methods::PUT;
 		break;
 	case http_method::DELETE:
-		cpprestsdk_method = web::http::methods::DEL;
+		return web::http::methods::DEL;
 		break;
 	case http_method::CONNECT:
-		cpprestsdk_method = web::http::methods::CONNECT;
+		return web::http::methods::CONNECT;
 		break;
 	case http_method::OPTIONS:
-		cpprestsdk_method = web::http::methods::OPTIONS;
+		return web::http::methods::OPTIONS;
 		break;
 	case http_method::TRACE:
-		cpprestsdk_method = web::http::methods::TRCE;
+		return web::http::methods::TRCE;
 		break;
 	case http_method::PATCH:
-		cpprestsdk_method = web::http::methods::PATCH;
-		break;
+		return web::http::methods::PATCH;
 	default:
 		throw std::out_of_range("The requested HTTP method is invalid.");
-		break;
 	}
-
-	return cpprestsdk_method;
 }
 
 http_response perform_http_request(const http_request &request) {
