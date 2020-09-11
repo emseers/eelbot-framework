@@ -28,9 +28,11 @@ include(GNUInstallDirs)
 #===============================================================================
 # Include directories and files
 #===============================================================================
+set(EF_PUBLIC_INCLUDE_DIRS
+	${PROJECT_SOURCE_DIR}/include
+)
 set(EF_INCLUDE_DIRS
-	${PROJECT_SOURCE_DIR}/include     # Public headers
-	${PROJECT_SOURCE_DIR}/src/include # Internal headers
+	${PROJECT_SOURCE_DIR}/src/include
 )
 file(GLOB_RECURSE EF_HEADERS RELATIVE "${PROJECT_SOURCE_DIR}/" "include/*.h*")
 
@@ -46,9 +48,9 @@ set(EF_LINK_LIBS
 #===============================================================================
 # Embedded dependencies
 #===============================================================================
-add_subdirectory(3rdparty/cpprestsdk)
-add_subdirectory(3rdparty/fmt)
-add_subdirectory(3rdparty/json)
+include(cmake/cpprestsdk.cmake)
+include(cmake/fmt.cmake)
+include(cmake/json.cmake)
 
 #===============================================================================
 # Sources
@@ -67,7 +69,10 @@ set_target_properties(${EF_LIB_NAME} PROPERTIES
 )
 target_compile_features(${EF_LIB_NAME} PRIVATE cxx_std_17)
 target_compile_definitions(${EF_LIB_NAME} PRIVATE _TURN_OFF_PLATFORM_STRING)
-target_include_directories(${EF_LIB_NAME} PRIVATE ${EF_INCLUDE_DIRS})
+target_include_directories(${EF_LIB_NAME}
+	PUBLIC ${EF_PUBLIC_INCLUDE_DIRS}
+	PRIVATE ${EF_INCLUDE_DIRS}
+)
 target_link_libraries(${EF_LIB_NAME} ${EF_LINK_LIBS})
 
 #===============================================================================
