@@ -5,19 +5,13 @@
 #define EELBOT_FRAMEWORK_DISCORD_BOT_REST_API_H
 
 #include "eelbot_framework/discord_bot/structs.hpp"
+#include "eelbot_framework/rest.hpp"
 
 #include <string>
 
 namespace eelbot_framework {
 
 namespace discord_bot {
-
-/**
- * @brief The context for a HTTP request's settings.
- */
-struct http_request_settings {
-	std::optional<std::string> proxy;
-};
 
 /**
  * @brief Returns a valid websocket endpoint that can be used to connect to a Discord Gateway.

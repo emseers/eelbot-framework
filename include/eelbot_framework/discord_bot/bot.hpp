@@ -20,7 +20,10 @@ namespace discord_bot {
 struct bot_context {
 	std::shared_ptr<log::logger> logger = log::stdout_logger::get();
 	std::string                  bot_token;
-	std::optional<std::string>   http_proxy;
+
+	std::optional<std::string> ca_info; // Use to specify a CA certificate bundle file.
+	std::optional<std::string> ca_path; // Use to specify a directory of multiple CA certificate files.
+	std::optional<std::string> http_proxy;
 };
 
 class bot {
@@ -28,7 +31,10 @@ private:
 	std::shared_ptr<log::logger> logger;
 	const std::string            token;
 	std::string                  ws_url;
-	std::optional<std::string>   http_proxy;
+
+	std::optional<std::string> ca_info;
+	std::optional<std::string> ca_path;
+	std::optional<std::string> http_proxy;
 
 	bool        gateway_active = false;
 	std::string session_id;

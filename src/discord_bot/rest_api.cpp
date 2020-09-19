@@ -29,7 +29,7 @@ gateway_response get_gateway(const http_request_settings &request_settings) {
 	http_request request;
 	request.endpoint = endpoints::gateway;
 	request.method   = http_method::GET;
-	request.proxy    = request_settings.proxy;
+	request.settings = request_settings;
 
 	http_response response = perform_http_request(request);
 	check_response_status(request.endpoint, response);
@@ -40,8 +40,8 @@ gateway_bot_response get_gateway_bot(const std::string &token, const http_reques
 	http_request request;
 	request.endpoint = endpoints::gateway_bot;
 	request.method   = http_method::GET;
-	request.proxy    = request_settings.proxy;
-	request.header_entries.insert({"Authorization", token});
+	request.settings = request_settings;
+	request.header.insert({"Authorization", token});
 
 	http_response response = perform_http_request(request);
 	check_response_status(request.endpoint, response);

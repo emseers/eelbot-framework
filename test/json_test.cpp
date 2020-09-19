@@ -5,6 +5,8 @@
 #include "eelbot_framework/discord_bot/structs.hpp"
 #include "eelbot_framework/json.hpp"
 
+// Serialization tests.
+
 TEST_CASE("discord_bot::session_start_limit can be serialized to JSON", "[unit-test][json]") {
 	eelbot_framework::discord_bot::session_start_limit session_start_limit;
 	session_start_limit.total       = 1;
@@ -38,6 +40,8 @@ TEST_CASE("discord_bot::gateway_bot_response can be serialized to JSON", "[unit-
 	            gateway_bot_response) == "{\"session_start_limit\":{\"remaining\":-2,\"reset_after\":0,\"total\":1},"
 	                                     "\"shards\":99,\"url\":\"https://github.com/Emseers/eelbot-framework\"}");
 }
+
+// Deserialization tests.
 
 TEST_CASE("discord_bot::session_start_limit can be deserialized from JSON", "[unit-test][json]") {
 	std::string                                        json;

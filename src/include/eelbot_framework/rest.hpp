@@ -13,7 +13,16 @@ namespace eelbot_framework {
 /**
  * @brief An emum of all the supported HTTP methods.
  */
-enum class http_method { GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH };
+enum class http_method { GET, HEAD, POST, PUT, DELETE, OPTIONS, PATCH };
+
+/**
+ * @brief The context for a HTTP request's settings.
+ */
+struct http_request_settings {
+	std::optional<std::string> ca_info; // Use to specify a CA certificate bundle file.
+	std::optional<std::string> ca_path; // Use to specify a directory of multiple CA certificate files.
+	std::optional<std::string> proxy;
+};
 
 /**
  * @brief The context for a HTTP request.
@@ -21,9 +30,10 @@ enum class http_method { GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, 
 struct http_request {
 	std::string                        endpoint;
 	http_method                        method;
-	std::map<std::string, std::string> header_entries;
+	std::map<std::string, std::string> header;
+	std::map<std::string, std::string> parameter;
 	std::string                        body;
-	std::optional<std::string>         proxy;
+	http_request_settings              settings;
 };
 
 /**
@@ -31,8 +41,9 @@ struct http_request {
  */
 struct http_response {
 	unsigned short                     status_code;
-	std::map<std::string, std::string> header_entries;
+	std::map<std::string, std::string> header;
 	std::string                        body;
+	double                             time_taken; // In seconds.
 };
 
 /**
