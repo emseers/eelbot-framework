@@ -10,3 +10,7 @@
 	path = 3rdparty/fmt
 	url = https://github.com/fmtlib/fmt
 	branch = master
+[submodule "3rdparty/catch"]
+	path = 3rdparty/catch
+	url = https://github.com/catchorg/Catch2.git
+	branch = master

@@ -1,7 +1,7 @@
 // Part of the Eelbot Framework project, under the MIT License.
 // Copyright (c) 2020 The Emseers.
 
-#include "eelbot_framework/cpprestsdk_helpers.hpp"
+#include "eelbot_framework/rest.hpp"
 
 #include "cpprest/http_client.h"
 #include "cpprest/producerconsumerstream.h"

@@ -13,7 +13,7 @@ namespace log {
 enum class level { FATAL, ERROR, WARN, INFO, DEBUG, TRACE };
 
 /**
- * @brief Converts a log level enum as a string.
+ * @brief Converts a log level to a string.
  *
  * @param lvl The log level.
  * @return The log level as a string.

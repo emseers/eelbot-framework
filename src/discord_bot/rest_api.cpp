@@ -3,9 +3,9 @@
 
 #include "eelbot_framework/discord_bot/rest_api.hpp"
 
-#include "eelbot_framework/cpprestsdk_helpers.hpp"
 #include "eelbot_framework/discord_bot/endpoints.hpp"
 #include "eelbot_framework/json.hpp"
+#include "eelbot_framework/rest.hpp"
 #include "fmt/core.h"
 
 #include <map>

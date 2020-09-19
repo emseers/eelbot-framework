@@ -1,8 +1,8 @@
 // Part of the Eelbot Framework project, under the MIT License.
 // Copyright (c) 2020 The Emseers.
 
-#ifndef EELBOT_FRAMEWORK_CPPRESTSDK_HELPERS_H
-#define EELBOT_FRAMEWORK_CPPRESTSDK_HELPERS_H
+#ifndef EELBOT_FRAMEWORK_REST_H
+#define EELBOT_FRAMEWORK_REST_H
 
 #include <map>
 #include <optional>
