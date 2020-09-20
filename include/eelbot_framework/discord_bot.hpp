@@ -5,3 +5,5 @@
 #define EELBOT_FRAMEWORK_DISCORD_BOT_H
 
 #include "eelbot_framework/discord_bot/bot.hpp"
+
+#endif

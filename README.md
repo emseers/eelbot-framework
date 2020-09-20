@@ -20,6 +20,12 @@ Eelbot Framework can be embedded directly into an existing CMake project by usin
 
 If you would like to embed any of these libraries in your top level project that also embeds Eelbot Framework, you will need to embed that library before embedding Eelbot Framework to avoid any duplicate target errors (since Eelbot Framework checks if these have been embedded before trying to embed them).
 
+**Note:** Eelbot Framework also embeds the following header only libraries without using `add_subdirectory`:
+* [asio](https://github.com/chriskohlhoff/asio)
+* [websocketpp](https://github.com/zaphoyd/websocketpp)
+
+You should be able to embed these in your top level project that also embeds Eelbot Framework in any order without any problems.
+
 ## Usage
 
 Coming soon...

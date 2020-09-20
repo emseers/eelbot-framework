@@ -49,9 +49,11 @@ set(EF_COMPILE_DEFS)
 #===============================================================================
 # Embedded dependencies
 #===============================================================================
-include(cmake/cpprestsdk.cmake)
+include(cmake/asio.cmake)
+include(cmake/cpr.cmake)
 include(cmake/fmt.cmake)
 include(cmake/json.cmake)
+include(cmake/websocketpp.cmake)
 
 #===============================================================================
 # Sources
@@ -92,7 +94,6 @@ if (EELBOT_FRAMEWORK_TESTS)
 
 	add_executable(${EF_TEST_NAME} ${EF_SOURCES} ${EF_TESTS})
 	set_target_properties(${EF_TEST_NAME} PROPERTIES
-		VERSION ${PROJECT_VERSION}
 		CXX_STANDARD 17
 		CXX_STANDARD_REQUIRED YES
 		CXX_EXTENSIONS NO

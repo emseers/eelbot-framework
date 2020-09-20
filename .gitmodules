@@ -14,3 +14,11 @@
 	path = 3rdparty/cpr
 	url = https://github.com/whoshuu/cpr
 	branch = master
+[submodule "3rdparty/asio"]
+	path = 3rdparty/asio
+	url = https://github.com/chriskohlhoff/asio
+	branch = master
+[submodule "3rdparty/websocketpp"]
+	path = 3rdparty/websocketpp
+	url = https://github.com/zaphoyd/websocketpp
+	branch = master
