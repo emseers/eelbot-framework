@@ -10,14 +10,29 @@
 #include <stdexcept>
 
 #define _EELBOT_FRAMEWORK_DISCORD_BOT_HTTP_REQUEST_SETTINGS                                                            \
-	{ this->ca_info, this->ca_path, this->http_proxy }
+	{ convert_to_eelbot_framework_tls_ver(this->tls_ver), this->ca_directory, this->http_proxy }
 namespace eelbot_framework {
+
+tls_version convert_to_eelbot_framework_tls_ver(discord_bot::tls_version ver) {
+	switch (ver) {
+	case discord_bot::tls_version::v1:
+		return tls_version::v1;
+	case discord_bot::tls_version::v11:
+		return tls_version::v11;
+	case discord_bot::tls_version::v12:
+		return tls_version::v12;
+	case discord_bot::tls_version::v13:
+		return tls_version::v13;
+	default:
+		throw std::out_of_range("The given TLS version is invalid.");
+	}
+}
 
 namespace discord_bot {
 
 bot::bot(const bot_context &context)
-    : logger(context.logger), token("Bot " + context.bot_token), ca_info(context.ca_info), ca_path(context.ca_path),
-      http_proxy(context.http_proxy) {
+    : logger(context.logger), token("Bot " + context.bot_token), tls_ver(context.tls_ver),
+      ca_directory(context.ca_directory), http_proxy(context.http_proxy) {
 	if (!this->logger) {
 		throw std::logic_error("Invalid logger.");
 	}

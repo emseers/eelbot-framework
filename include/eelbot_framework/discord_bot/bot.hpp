@@ -15,14 +15,19 @@ namespace eelbot_framework {
 namespace discord_bot {
 
 /**
+ * @brief An emum of all the supported TLS versions.
+ */
+enum class tls_version { v1, v11, v12, v13 };
+
+/**
  * @brief The context for a bot object.
  */
 struct bot_context {
 	std::shared_ptr<log::logger> logger = log::stdout_logger::get();
 	std::string                  bot_token;
 
-	std::optional<std::string> ca_info; // Use to specify a CA certificate bundle file.
-	std::optional<std::string> ca_path; // Use to specify a directory of multiple CA certificate files.
+	tls_version                tls_ver = tls_version::v12;
+	std::optional<std::string> ca_directory; // The directory must be prepared using the openssl `c_rehash` utility.
 	std::optional<std::string> http_proxy;
 };
 
@@ -32,8 +37,8 @@ private:
 	const std::string            token;
 	std::string                  ws_url;
 
-	std::optional<std::string> ca_info;
-	std::optional<std::string> ca_path;
+	tls_version                tls_ver;
+	std::optional<std::string> ca_directory;
 	std::optional<std::string> http_proxy;
 
 	bool        gateway_active = false;

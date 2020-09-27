@@ -10,6 +10,21 @@
 
 namespace eelbot_framework {
 
+cpr::SslOptions get_cpr_ssl_opts(tls_version tls_ver) {
+	switch (tls_ver) {
+	case tls_version::v1:
+		return cpr::Ssl(cpr::ssl::TLSv1{});
+	case tls_version::v11:
+		return cpr::Ssl(cpr::ssl::TLSv1_1{});
+	case tls_version::v12:
+		return cpr::Ssl(cpr::ssl::TLSv1_2{});
+	case tls_version::v13:
+		return cpr::Ssl(cpr::ssl::TLSv1_3{});
+	default:
+		throw std::out_of_range("The given TLS version is invalid.");
+	}
+}
+
 template <typename... Ts>
 cpr::Response perform_cpr_http_request(const http_method &method, Ts &&... ts) {
 	switch (method) {
@@ -49,13 +64,9 @@ http_response perform_http_request(const http_request &request) {
 	cpr::Body body(request.body);
 
 	// Set SSL options.
-	cpr::SslOptions ssl_opts;
-	if (request.settings.ca_info.has_value()) {
-		std::string ca_info = request.settings.ca_info.value();
-		ssl_opts.SetOption(cpr::ssl::CaInfo(std::move(ca_info)));
-	}
-	if (request.settings.ca_path.has_value()) {
-		std::string ca_path = request.settings.ca_path.value();
+	cpr::SslOptions ssl_opts = get_cpr_ssl_opts(request.settings.tls_ver);
+	if (request.settings.ca_directory.has_value()) {
+		std::string ca_path = request.settings.ca_directory.value();
 		ssl_opts.SetOption(cpr::ssl::CaPath(std::move(ca_path)));
 	}
 
@@ -76,7 +87,7 @@ http_response perform_http_request(const http_request &request) {
 	}
 
 	response.status_code = cpr_response.status_code;
-	response.header      = std::map<std::string, std::string>(cpr_response.header.begin(), cpr_response.header.end());
+	response.header      = http_header(cpr_response.header.begin(), cpr_response.header.end());
 	response.body        = cpr_response.text;
 	response.time_taken  = cpr_response.elapsed;
 
