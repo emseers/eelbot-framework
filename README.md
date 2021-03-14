@@ -13,6 +13,7 @@ Eelbot Framework requires C++ 17 and CMake 3.15 or higher to build. It also requ
 Eelbot Framework can be embedded directly into an existing CMake project by using either [`add_subdirectory`](https://cmake.org/cmake/help/latest/command/add_subdirectory.html) or (since CMake 3.11) [`FetchContent`](https://cmake.org/cmake/help/latest/module/FetchContent.html).
 
 **Note:** Eelbot Framework embeds the following libraries using `add_subdirectory`:
+* [zlib](https://github.com/madler/zlib)
 * [cpr](https://github.com/whoshuu/cpr)
 * [fmt](https://github.com/fmtlib/fmt)
 * [nlohmann/json](https://github.com/nlohmann/json)

@@ -22,3 +22,7 @@
 	path = 3rdparty/websocketpp
 	url = https://github.com/zaphoyd/websocketpp
 	branch = master
+[submodule "3rdparty/zlib"]
+	path = 3rdparty/zlib
+	url = https://github.com/madler/zlib.git
+	branch = master

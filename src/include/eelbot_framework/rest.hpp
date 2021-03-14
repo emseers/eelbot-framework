@@ -4,31 +4,16 @@
 #ifndef EELBOT_FRAMEWORK_REST_H
 #define EELBOT_FRAMEWORK_REST_H
 
+#include "cpr/cpr.h"
+#include "eelbot_framework/tls.hpp"
+
 #include <map>
 #include <optional>
 #include <string>
 
 namespace eelbot_framework {
 
-/**
- * @brief A functor for case insensitive comparison for strings.
- *
- */
-struct case_insensitive_compare {
-	bool operator()(const std::string &a, const std::string &b) const noexcept {
-		return std::lexicographical_compare(
-		    a.begin(), a.end(), b.begin(), b.end(), [](unsigned char ac, unsigned char bc) {
-			    return std::tolower(ac) < std::tolower(bc);
-		    });
-	}
-};
-
-using http_header = std::map<std::string, std::string, case_insensitive_compare>;
-
-/**
- * @brief An emum of all the supported TLS versions.
- */
-enum class tls_version { v1, v11, v12, v13 };
+using http_header = cpr::Header;
 
 /**
  * @brief An emum of all the supported HTTP methods.

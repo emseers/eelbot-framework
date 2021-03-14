@@ -3,7 +3,6 @@
 
 #include "eelbot_framework/rest.hpp"
 
-#include "cpr/cpr.h"
 #include "eelbot_framework/discord_bot/endpoints.hpp"
 
 #include <stdexcept>
@@ -21,12 +20,12 @@ cpr::SslOptions get_cpr_ssl_opts(tls_version tls_ver) {
 	case tls_version::v13:
 		return cpr::Ssl(cpr::ssl::TLSv1_3{});
 	default:
-		throw std::out_of_range("The given TLS version is invalid.");
+		throw std::out_of_range("the given TLS version is invalid");
 	}
 }
 
 template <typename... Ts>
-cpr::Response perform_cpr_http_request(const http_method &method, Ts &&... ts) {
+cpr::Response perform_cpr_http_request(const http_method &method, Ts &&...ts) {
 	switch (method) {
 	case http_method::GET:
 		return cpr::Get(std::move(ts)...);
@@ -43,7 +42,7 @@ cpr::Response perform_cpr_http_request(const http_method &method, Ts &&... ts) {
 	case http_method::PATCH:
 		return cpr::Patch(std::move(ts)...);
 	default:
-		throw std::out_of_range("The requested HTTP method is invalid.");
+		throw std::out_of_range("the requested HTTP method is invalid");
 	}
 }
 
@@ -52,7 +51,7 @@ http_response perform_http_request(const http_request &request) {
 	cpr::Url endpoint(request.endpoint);
 
 	// Set header entries.
-	cpr::Header header(request.header.begin(), request.header.end());
+	cpr::Header header = request.header;
 
 	// Set parameters.
 	cpr::Parameters parameters;
@@ -82,12 +81,12 @@ http_response perform_http_request(const http_request &request) {
 	    perform_cpr_http_request(request.method, endpoint, header, parameters, body, ssl_opts, proxy);
 
 	if (cpr_response.error.code != cpr::ErrorCode::OK) {
-		throw std::runtime_error("Failed to perform HTTP request to endpoint " + request.endpoint +
-		                         ". Error: " + cpr_response.error.message + ".");
+		throw std::runtime_error("failed to perform HTTP request to endpoint " + request.endpoint +
+		                         "; error: " + cpr_response.error.message);
 	}
 
 	response.status_code = cpr_response.status_code;
-	response.header      = http_header(cpr_response.header.begin(), cpr_response.header.end());
+	response.header      = cpr_response.header;
 	response.body        = cpr_response.text;
 	response.time_taken  = cpr_response.elapsed;
 

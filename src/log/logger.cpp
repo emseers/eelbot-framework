@@ -24,7 +24,7 @@ std::string level_string(const level lvl) {
 	case level::TRACE:
 		return "TRACE";
 	default:
-		throw std::out_of_range("Log level out of range.");
+		throw std::out_of_range("log level out of range");
 	}
 }
 

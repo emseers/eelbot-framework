@@ -6,18 +6,16 @@
 
 #include "eelbot_framework/log/logger.hpp"
 #include "eelbot_framework/log/stdout_logger.hpp"
+#include "eelbot_framework/tls.hpp"
 
 #include <optional>
 #include <string>
 
 namespace eelbot_framework {
 
-namespace discord_bot {
+struct http_request_settings;
 
-/**
- * @brief An emum of all the supported TLS versions.
- */
-enum class tls_version { v1, v11, v12, v13 };
+namespace discord_bot {
 
 /**
  * @brief The context for a bot object.
@@ -43,6 +41,8 @@ private:
 
 	bool        gateway_active = false;
 	std::string session_id;
+
+	http_request_settings get_http_request_settings();
 
 public:
 	bot(const bot_context &context);

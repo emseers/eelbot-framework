@@ -1,3 +1,8 @@
+# Disable in-source builds.
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+	message(FATAL_ERROR "FATAL: In-source builds are not supported.")
+endif()
+
 cmake_minimum_required(VERSION 3.15)
 
 #===============================================================================
@@ -10,7 +15,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Determine if project is built an embedded project or a top level project.
 set(TOP_LEVEL_PROJECT OFF)
-if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 	set(TOP_LEVEL_PROJECT ON)
 endif ()
 
@@ -50,6 +55,7 @@ set(EF_COMPILE_DEFS)
 # Embedded dependencies
 #===============================================================================
 include(cmake/asio.cmake)
+include(cmake/zlib.cmake)
 include(cmake/cpr.cmake)
 include(cmake/fmt.cmake)
 include(cmake/json.cmake)

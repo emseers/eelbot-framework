@@ -8,50 +8,39 @@
 #include "fmt/core.h"
 
 #include <stdexcept>
-
-#define _EELBOT_FRAMEWORK_DISCORD_BOT_HTTP_REQUEST_SETTINGS                                                            \
-	{ convert_to_eelbot_framework_tls_ver(this->tls_ver), this->ca_directory, this->http_proxy }
 namespace eelbot_framework {
 
-tls_version convert_to_eelbot_framework_tls_ver(discord_bot::tls_version ver) {
-	switch (ver) {
-	case discord_bot::tls_version::v1:
-		return tls_version::v1;
-	case discord_bot::tls_version::v11:
-		return tls_version::v11;
-	case discord_bot::tls_version::v12:
-		return tls_version::v12;
-	case discord_bot::tls_version::v13:
-		return tls_version::v13;
-	default:
-		throw std::out_of_range("The given TLS version is invalid.");
-	}
-}
-
 namespace discord_bot {
+
+http_request_settings bot::get_http_request_settings() {
+	http_request_settings request_settings;
+	request_settings.tls_ver      = this->tls_ver;
+	request_settings.ca_directory = this->ca_directory;
+	request_settings.proxy        = this->http_proxy;
+	return request_settings;
+}
 
 bot::bot(const bot_context &context)
     : logger(context.logger), token("Bot " + context.bot_token), tls_ver(context.tls_ver),
       ca_directory(context.ca_directory), http_proxy(context.http_proxy) {
 	if (!this->logger) {
-		throw std::logic_error("Invalid logger.");
+		throw std::logic_error("invalid logger");
 	}
 
-	this->logger->log(log::level::TRACE, "Getting websocket URL.");
+	this->logger->log(log::level::DEBUG, "Getting websocket URL.");
 	try {
-		gateway_bot_response response =
-		    get_gateway_bot(this->token, _EELBOT_FRAMEWORK_DISCORD_BOT_HTTP_REQUEST_SETTINGS);
+		gateway_bot_response response = get_gateway_bot(this->token, this->get_http_request_settings());
 		if (response.sess_start_limit.remaining <= 0) {
-			throw std::runtime_error("No sessions remaining. Please regenerate a new token.");
+			throw std::runtime_error("no sessions remaining; please regenerate a new token.");
 		}
 
 		this->ws_url = response.url;
 	} catch (std::exception &e) {
-		this->logger->log(log::level::ERROR, fmt::format("Error getting websocket URL: {}", e.what()));
+		this->logger->log(log::level::ERROR, fmt::format("Error getting websocket URL: {}.", e.what()));
 		throw;
 	}
 
-	this->logger->log(log::level::INFO, "Initialized bot.");
+	this->logger->log(log::level::INFO, "Initialized bot successfully.");
 }
 
 bot::~bot() {}

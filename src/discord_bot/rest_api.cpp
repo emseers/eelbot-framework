@@ -19,8 +19,8 @@ void check_response_status(
     const std::string &endpoint, const http_response &response, const unsigned short &expected_status_code = 200) {
 	if (response.status_code != expected_status_code) {
 		throw std::runtime_error(fmt::format(
-		    "Got unexpected status code for HTTP request to endpoint {}. Expected code: {}. Received code: {}. "
-		    "Received message: {}.",
+		    "got unexpected status code for HTTP request to endpoint {}; expected code: {}, received code: {}, "
+		    "received message: {}",
 		    endpoint, expected_status_code, response.status_code, response.body));
 	}
 }
