@@ -1,3 +1,6 @@
+# Part of the Eelbot Framework project, under the MIT License.
+# Copyright (c) 2020 The Emseers.
+
 # Disable in-source builds.
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 	message(FATAL_ERROR "FATAL: In-source builds are not supported.")
@@ -39,6 +42,7 @@ set(EF_PUBLIC_INCLUDE_DIRS
 set(EF_INCLUDE_DIRS
 	${PROJECT_SOURCE_DIR}/src/include
 )
+set(EF_ZLIB_INCLUDE_DIRS)
 file(GLOB_RECURSE EF_HEADERS RELATIVE "${PROJECT_SOURCE_DIR}/" "include/*.h*")
 
 #===============================================================================
