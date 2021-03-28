@@ -4,6 +4,9 @@
 #ifndef EELBOT_FRAMEWORK_JSON_H
 #define EELBOT_FRAMEWORK_JSON_H
 
+#include "eelbot_framework/json/discord_bot.hpp"
+#include "nlohmann/json.hpp"
+
 #include <string>
 
 namespace eelbot_framework {
@@ -18,7 +21,10 @@ namespace eelbot_framework {
  * @return The serialized JSON string.
  */
 template <typename T>
-std::string to_json_string(const T &object, const int indent = -1, const char indent_char = ' ');
+inline std::string to_json_str(const T &object, const int indent = -1, const char indent_char = ' ') {
+	nlohmann::json json = object;
+	return json.dump(indent, indent_char);
+}
 
 /**
  * @brief Deserializes a JSON string to a JSONifiable object.
@@ -27,7 +33,10 @@ std::string to_json_string(const T &object, const int indent = -1, const char in
  * @return The deserialized object.
  */
 template <typename T>
-T parse_from_json_string(const std::string &json_string);
+inline T parse_from_json(const std::string &json_string) {
+	nlohmann::json json = nlohmann::json::parse(json_string);
+	return json.get<T>();
+}
 
 } // namespace eelbot_framework
 

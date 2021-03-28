@@ -6,6 +6,7 @@
 
 #include <optional>
 #include <string>
+#include <variant>
 
 namespace eelbot_framework {
 
@@ -27,12 +28,15 @@ struct gateway_bot_response {
 	session_start_limit sess_start_limit;
 };
 
-// TODO: Update type of d.
+struct event_hello {
+	int heartbeat_interval = 0;
+};
+
 struct payload {
-	int                        op = 0;
-	std::optional<std::string> d;
-	std::optional<int>         s;
-	std::optional<std::string> t;
+	int                             op = 0;
+	std::variant<bool, event_hello> d;
+	std::optional<int>              s;
+	std::optional<std::string>      t;
 };
 
 } // namespace discord_bot

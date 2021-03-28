@@ -33,7 +33,7 @@ gateway_response get_gateway(const http_request_settings &request_settings) {
 
 	http_response response = perform_http_request(request);
 	check_response_status(request.endpoint, response);
-	return parse_from_json_string<gateway_response>(response.body);
+	return parse_from_json<gateway_response>(response.body);
 }
 
 gateway_bot_response get_gateway_bot(const std::string &token, const http_request_settings &request_settings) {
@@ -45,7 +45,7 @@ gateway_bot_response get_gateway_bot(const std::string &token, const http_reques
 
 	http_response response = perform_http_request(request);
 	check_response_status(request.endpoint, response);
-	return parse_from_json_string<gateway_bot_response>(response.body);
+	return parse_from_json<gateway_bot_response>(response.body);
 }
 
 } // namespace discord_bot
