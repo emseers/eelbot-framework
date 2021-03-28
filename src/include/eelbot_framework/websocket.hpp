@@ -65,28 +65,28 @@ public:
 	~websocket_client();
 
 	/**
-	 * @brief Set the handler to be called on a successful connection.
+	 * @brief Sets the handler to be called on a successful connection.
 	 *
 	 * @param handler The handler to set.
 	 */
 	void set_open_handler(std::function<void()> handler);
 
 	/**
-	 * @brief Set the handler to be called on a failure to open a successful connection.
+	 * @brief Sets the handler to be called on a failure to open a successful connection.
 	 *
 	 * @param handler The handler to set.
 	 */
 	void set_fail_handler(std::function<void()> handler);
 
 	/**
-	 * @brief Set the handler to be called after the closure of the connection.
+	 * @brief Sets the handler to be called after the closure of the connection.
 	 *
 	 * @param handler The handler to set.
 	 */
 	void set_close_handler(std::function<void()> handler);
 
 	/**
-	 * @brief Set the handler to be called after receiving a message.
+	 * @brief Sets the handler to be called after receiving a message.
 	 *
 	 * @param handler The handler to set.
 	 */

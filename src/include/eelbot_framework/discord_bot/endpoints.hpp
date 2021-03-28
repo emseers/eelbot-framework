@@ -10,7 +10,7 @@ namespace eelbot_framework {
 
 namespace discord_bot {
 
-static const std::string gateway_version = "6";
+static const std::string gateway_version = "8";
 
 namespace endpoints {
 

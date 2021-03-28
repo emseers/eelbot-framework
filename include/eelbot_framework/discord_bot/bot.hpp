@@ -8,12 +8,15 @@
 #include "eelbot_framework/log/stdout_logger.hpp"
 #include "eelbot_framework/tls.hpp"
 
+#include <atomic>
 #include <optional>
 #include <string>
 
 namespace eelbot_framework {
 
 struct http_request_settings;
+class websocket_client;
+class zlib_inflate;
 
 namespace discord_bot {
 
@@ -39,14 +42,18 @@ private:
 	std::optional<std::string> ca_directory;
 	std::optional<std::string> http_proxy;
 
-	bool        gateway_active = false;
-	std::string session_id;
+	mutable std::atomic<bool>         gateway_active = false;
+	std::shared_ptr<websocket_client> ws_client;
+	std::shared_ptr<zlib_inflate>     z_inflator;
 
 	http_request_settings get_http_request_settings();
+	void                  handle_message(const std::string &message);
 
 public:
 	bot(const bot_context &context);
 	~bot();
+
+	void run();
 };
 
 } // namespace discord_bot
