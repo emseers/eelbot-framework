@@ -50,7 +50,18 @@ struct websocket_endpoint_context {
 };
 
 /**
+ * @brief An object to store a websocket close status.
+ */
+struct websocket_status {
+	unsigned short code = 0;
+	std::string    message;
+};
+
+/**
  * @brief An object to connect to a websocket endpoint.
+ *
+ * Note that this object is meant to be used for a single connection only and should be discarded after the connection
+ * is closed.
  */
 class websocket_client {
 private:
@@ -110,8 +121,18 @@ public:
 
 	/**
 	 * @brief Closes the connection to the endpoint and stops the client loop.
+	 *
+	 * @param status_code The status code to close the connection with.
+	 * @param status_message The status message to close the connection with.
 	 */
-	void close();
+	void close(const unsigned short status_code = 1000, const std::string &status_message = "");
+
+	/**
+	 * @brief Gets the status the websocket connection was closed with.
+	 *
+	 * @return The status.
+	 */
+	websocket_status get_close_status();
 };
 
 } // namespace eelbot_framework

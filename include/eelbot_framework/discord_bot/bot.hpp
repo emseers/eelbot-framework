@@ -9,6 +9,8 @@
 #include "eelbot_framework/tls.hpp"
 
 #include <atomic>
+#include <condition_variable>
+#include <mutex>
 #include <optional>
 #include <string>
 
@@ -42,18 +44,30 @@ private:
 	std::optional<std::string> ca_directory;
 	std::optional<std::string> http_proxy;
 
-	mutable std::atomic<bool>         gateway_active = false;
+	mutable std::mutex                gateway_mutex;
+	mutable bool                      started        = false;
+	mutable bool                      gateway_active = false;
+	mutable bool                      stopping       = false;
+	mutable std::mutex                heartbeat_mutex;
+	mutable std::condition_variable   stop_heartbeating;
+	mutable std::atomic_int           sequence_num = -1;
+	mutable std::atomic_bool          ack_received = false;
 	std::shared_ptr<websocket_client> ws_client;
 	std::shared_ptr<zlib_inflate>     z_inflator;
 
-	http_request_settings get_http_request_settings();
-	void                  handle_message(const std::string &message);
+	http_request_settings get_http_request_settings() noexcept;
+
+	void send_heartbeat();
+	void send_identify();
+
+	void handle_message(const std::string &message) noexcept;
 
 public:
 	bot(const bot_context &context);
 	~bot();
 
 	void run();
+	void stop();
 };
 
 } // namespace discord_bot

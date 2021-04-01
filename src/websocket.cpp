@@ -110,12 +110,23 @@ void websocket_client::send(const std::string &msg) {
 	}
 }
 
-void websocket_client::close() {
+void websocket_client::close(const unsigned short status_code, const std::string &status_message) {
 	std::error_code ec;
-	this->ws_client.close(this->conn->get_handle(), websocketpp::close::status::normal, "", ec);
+	this->ws_client.close(this->conn->get_handle(), status_code, status_message, ec);
 	if (ec) {
 		throw std::runtime_error(ec.message());
 	}
+}
+
+websocket_status websocket_client::get_close_status() {
+	if (!this->conn) {
+		throw std::runtime_error("no connection initialized");
+	}
+
+	websocket_status status;
+	status.code    = this->conn->get_remote_close_code();
+	status.message = this->conn->get_remote_close_reason();
+	return status;
 }
 
 } // namespace eelbot_framework
