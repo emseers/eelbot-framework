@@ -45,20 +45,36 @@ void bot::send_identify() {
 
 	identify id;
 	id.token      = this->token;
-	id.intents    = 513;
+	id.intents    = 513; // TODO: Determine this dynamically.
 	id.shard      = sh_info;
 	id.properties = id_conn_props;
 	id.compress   = false;
 
+	this->logger->log(log::level::DEBUG, "Sending identify.");
 	payload pl;
 	pl.op = opcode::identify;
 	pl.d  = id;
 	this->ws_client->send(to_json_str(pl));
 }
 
-void bot::handle_message(const std::string &message) noexcept try {
-	this->logger->log(log::level::TRACE, "Received message from gateway.");
+void bot::send_resume() {
+	resume rs;
+	rs.token = this->token;
+	rs.seq   = this->sequence_num;
 
+	{
+		std::scoped_lock lock(this->session_mutex);
+		rs.session_id = this->session_id;
+	}
+
+	this->logger->log(log::level::DEBUG, "Sending resume.");
+	payload pl;
+	pl.op = opcode::resume;
+	pl.d  = rs;
+	this->ws_client->send(to_json_str(pl));
+}
+
+void bot::handle_message(const std::string &message) noexcept try {
 	bool flush = false;
 	if (message.size() >= 4) {
 		flush = message[message.size() - 4] == '\x00' && message[message.size() - 3] == '\x00' &&
@@ -80,9 +96,38 @@ void bot::handle_message(const std::string &message) noexcept try {
 	}
 
 	switch (pl.op) {
+	case opcode::dispatch: {
+		this->logger->log(log::level::TRACE, fmt::format("Received event {}.", pl.t.value_or("NULL")));
+
+		if (pl.t.has_value()) {
+			if (pl.t.value() == event::ready) {
+				ready event_data = std::get<ready>(pl.d);
+
+				std::scoped_lock lock(this->session_mutex);
+				this->session_id = event_data.session_id;
+				this->logger->log(log::level::DEBUG, fmt::format("Session ID updated to {}.", this->session_id));
+			}
+		}
+		break;
+	}
+	case opcode::reconnect: {
+		this->logger->log(log::level::DEBUG, "Received reconnect.");
+
+		this->ws_client->close(close_event_code::internal_retry_and_resume);
+		break;
+	}
+	case opcode::invalid_session: {
+		this->logger->log(log::level::DEBUG, "Received invalid session.");
+
+		this->ws_client->close(close_event_code::internal_retry_and_identify);
+		break;
+	}
 	case opcode::hello: {
-		int heartbeat_interval = std::get<hello>(pl.d).heartbeat_interval;
-		this->ack_received     = true;
+		this->logger->log(log::level::DEBUG, "Received hello.");
+
+		hello event_data         = std::get<hello>(pl.d);
+		int   heartbeat_interval = event_data.heartbeat_interval;
+		this->ack_received       = true;
 
 		// Launch thread to perform heartbeats at the given interval.
 		std::thread([this, heartbeat_interval]() {
@@ -103,11 +148,23 @@ void bot::handle_message(const std::string &message) noexcept try {
 			this->logger->log(log::level::TRACE, "Stopping heartbeats.");
 		}).detach();
 
-		// TODO: Determine whether to send an identify or a reconnect.
-		this->send_identify();
+		// Determine whether to identify or resume.
+		bool resume = false;
+		{
+			std::scoped_lock lock(this->session_mutex);
+			resume = this->sequence_num >= 0 && !this->session_id.empty();
+		}
+
+		if (resume) {
+			this->send_resume();
+		} else {
+			this->send_identify();
+		}
 		break;
 	}
 	case opcode::heartbeat_ack: {
+		this->logger->log(log::level::TRACE, "Received heartbeat ack.");
+
 		this->ack_received = true;
 		break;
 	}
@@ -190,6 +247,11 @@ void bot::run() {
 			lock.unlock();
 		});
 
+		this->ws_client->set_fail_handler([this, &lock]() {
+			this->started = true;
+			lock.unlock();
+		});
+
 		this->ws_client->set_close_handler([this, &lock]() {
 			lock.lock();
 			this->gateway_active = false;
@@ -207,11 +269,60 @@ void bot::run() {
 			this->stop_heartbeating.notify_one();
 		}
 
-		websocket_status status = this->ws_client->get_close_status();
-		this->logger->log(log::level::DEBUG,
-		    fmt::format("Websocket connection closed with code={}; message={}", status.code, status.message));
+		websocket_status status;
+		try {
+			status = this->ws_client->get_close_status();
+			this->logger->log(log::level::DEBUG,
+			    fmt::format("Websocket connection closed with code={}; message={}", status.code, status.message));
+		} catch (std::exception &e) {
+			this->logger->log(log::level::ERROR, fmt::format("Error closing connection: {}.", e.what()));
+		}
 
-		retry = false; // TODO: Determine whether to retry based on return code.
+		// Determine whether to retry or not.
+		switch (status.code) {
+		case close_event_code::unknown_opcode:
+		case close_event_code::decode_error:
+		case close_event_code::not_authenticated:
+		case close_event_code::already_authenticated:
+		case close_event_code::invalid_api_version:
+		case close_event_code::invalid_intents:
+		case close_event_code::disallowed_intents: {
+			// This may be a problem with the library, so don't retry to be safe.
+			this->logger->log(log::level::ERROR, "Logic error; Eelbot Framework library version may be out of date.");
+			retry = false;
+			break;
+		}
+		case close_event_code::authentication_failed:
+		case close_event_code::invalid_shard:
+		case close_event_code::sharding_required: {
+			// Unrecoverable error; don't retry.
+			retry = false;
+			break;
+		}
+		case close_event_code::invalid_seq:
+		case close_event_code::internal_retry_and_identify: {
+			// Retry but don't try to resume.
+			std::scoped_lock lock(this->session_mutex);
+			this->sequence_num = -1;
+			this->session_id.clear();
+			retry = true;
+			break;
+		}
+		case close_event_code::abnormal_closure:
+		case close_event_code::unknown_error:
+		case close_event_code::rate_limited:
+		case close_event_code::session_timed_out:
+		case close_event_code::internal_retry_and_resume: {
+			// Retry and try to resume.
+			retry = true;
+			break;
+		}
+		default: {
+			// Unrecognized error; don't retry to be safe.
+			retry = false;
+			break;
+		}
+		}
 	} while (retry);
 
 	this->logger->log(log::level::INFO, "Bot has been shut down.");

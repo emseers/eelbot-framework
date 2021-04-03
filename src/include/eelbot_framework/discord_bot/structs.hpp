@@ -70,9 +70,9 @@ struct activity_secrets {
 
 struct activity {
 	std::string                        name;
-	int                                type;
+	int                                type = 0;
 	std::optional<std::string>         url;
-	int                                created_at;
+	int                                created_at = 0;
 	std::optional<activity_timestamps> timestamps;
 	std::optional<std::string>         application_id;
 	std::optional<std::string>         details;
@@ -94,6 +94,32 @@ struct status_update {
 	bool                  afk;
 };
 
+struct user {
+	std::string                id;
+	std::string                username;
+	std::string                discriminator;
+	std::optional<std::string> avatar;
+	std::optional<bool>        bot;
+	std::optional<bool>        system;
+	std::optional<bool>        mfa_enabled;
+	std::optional<std::string> locale;
+	std::optional<bool>        verified;
+	std::optional<std::string> email;
+	std::optional<int>         flags;
+	std::optional<int>         premium_type;
+	std::optional<int>         public_flags;
+};
+
+struct unavailable_guild {
+	std::string         id;
+	std::optional<bool> unavailable;
+};
+
+struct partial_application {
+	std::string id;
+	int         flags = 0;
+};
+
 struct identify_connection_properties {
 	std::string os;
 	std::string browser;
@@ -108,18 +134,34 @@ struct identify {
 	std::optional<shard_info>      shard;
 	std::optional<status_update>   presence;
 	std::optional<bool>            guild_subscriptions;
-	int                            intents;
+	int                            intents = 0;
+};
+
+struct resume {
+	std::string token;
+	std::string session_id;
+	int         seq = 0;
 };
 
 struct hello {
 	int heartbeat_interval = 0;
 };
 
+struct ready {
+	int                            v = 0;
+	user                           user_info;
+	std::vector<std::string>       private_channels;
+	std::vector<unavailable_guild> guilds;
+	std::string                    session_id;
+	std::optional<shard_info>      shard;
+	partial_application            application;
+};
+
 struct payload {
-	int                                      op = 0;
-	std::variant<bool, int, identify, hello> d;
-	std::optional<int>                       s;
-	std::optional<std::string>               t;
+	int                                                     op = 0;
+	std::variant<bool, int, identify, resume, hello, ready> d;
+	std::optional<int>                                      s;
+	std::optional<std::string>                              t;
 };
 
 } // namespace discord_bot
