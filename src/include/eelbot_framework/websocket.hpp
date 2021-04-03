@@ -106,7 +106,7 @@ public:
 	/**
 	 * @brief Connects to the endpoint and starts the websocket client loop.
 	 *
-	 * Note that this blocks until close() is called.
+	 * Note that this blocks until either the server closes the connection or close is called.
 	 *
 	 * @param endpoint The endpoint to connect to.
 	 */

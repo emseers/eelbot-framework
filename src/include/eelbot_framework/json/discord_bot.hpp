@@ -4,7 +4,7 @@
 #ifndef EELBOT_FRAMEWORK_JSON_DISCORD_BOT_H
 #define EELBOT_FRAMEWORK_JSON_DISCORD_BOT_H
 
-#include "eelbot_framework/discord_bot/opcodes.hpp"
+#include "eelbot_framework/discord_bot/codes.hpp"
 #include "eelbot_framework/discord_bot/structs.hpp"
 #include "eelbot_framework/json/common.hpp"
 #include "nlohmann/json.hpp"
@@ -79,8 +79,8 @@ inline void to_json(nlohmann::json &j, const activity_timestamps &at) {
 }
 
 inline void from_json(const nlohmann::json &j, activity_timestamps &at) {
-	j["start"].get_to(at.start);
-	j["end"].get_to(at.end);
+	get_optional(j, "start").get_to(at.start);
+	get_optional(j, "end").get_to(at.end);
 }
 
 inline void to_json(nlohmann::json &j, const activity_emoji &ae) {
@@ -93,8 +93,8 @@ inline void to_json(nlohmann::json &j, const activity_emoji &ae) {
 
 inline void from_json(const nlohmann::json &j, activity_emoji &ae) {
 	j.at("name").get_to(ae.name);
-	j["id"].get_to(ae.id);
-	j["animated"].get_to(ae.animated);
+	get_optional(j, "id").get_to(ae.id);
+	get_optional(j, "animated").get_to(ae.animated);
 }
 
 inline void to_json(nlohmann::json &j, const activity_party &ap) {
@@ -105,8 +105,8 @@ inline void to_json(nlohmann::json &j, const activity_party &ap) {
 }
 
 inline void from_json(const nlohmann::json &j, activity_party &ap) {
-	j["id"].get_to(ap.id);
-	j["size"].get_to(ap.size);
+	get_optional(j, "id").get_to(ap.id);
+	get_optional(j, "size").get_to(ap.size);
 }
 
 inline void to_json(nlohmann::json &j, const activity_assets &aa) {
@@ -119,10 +119,10 @@ inline void to_json(nlohmann::json &j, const activity_assets &aa) {
 }
 
 inline void from_json(const nlohmann::json &j, activity_assets &aa) {
-	j["large_image"].get_to(aa.large_image);
-	j["large_text"].get_to(aa.large_text);
-	j["small_image"].get_to(aa.small_image);
-	j["small_text"].get_to(aa.small_text);
+	get_optional(j, "large_image").get_to(aa.large_image);
+	get_optional(j, "large_text").get_to(aa.large_text);
+	get_optional(j, "small_image").get_to(aa.small_image);
+	get_optional(j, "small_text").get_to(aa.small_text);
 }
 
 inline void to_json(nlohmann::json &j, const activity_secrets &as) {
@@ -134,9 +134,9 @@ inline void to_json(nlohmann::json &j, const activity_secrets &as) {
 }
 
 inline void from_json(const nlohmann::json &j, activity_secrets &as) {
-	j["join"].get_to(as.join);
-	j["spectate"].get_to(as.spectate);
-	j["match"].get_to(as.match);
+	get_optional(j, "join").get_to(as.join);
+	get_optional(j, "spectate").get_to(as.spectate);
+	get_optional(j, "match").get_to(as.match);
 }
 
 inline void to_json(nlohmann::json &j, const activity &a) {
@@ -161,18 +161,18 @@ inline void to_json(nlohmann::json &j, const activity &a) {
 inline void from_json(const nlohmann::json &j, activity &a) {
 	j.at("name").get_to(a.name);
 	j.at("type").get_to(a.type);
-	j["url"].get_to(a.url);
+	get_optional(j, "url").get_to(a.url);
 	j.at("created_at").get_to(a.created_at);
-	j["timestamps"].get_to(a.timestamps);
-	j["application_id"].get_to(a.application_id);
-	j["details"].get_to(a.details);
-	j["state"].get_to(a.state);
-	j["emoji"].get_to(a.emoji);
-	j["party"].get_to(a.party);
-	j["assets"].get_to(a.assets);
-	j["secrets"].get_to(a.secrets);
-	j["instance"].get_to(a.instance);
-	j["flags"].get_to(a.flags);
+	get_optional(j, "timestamps").get_to(a.timestamps);
+	get_optional(j, "application_id").get_to(a.application_id);
+	get_optional(j, "details").get_to(a.details);
+	get_optional(j, "state").get_to(a.state);
+	get_optional(j, "emoji").get_to(a.emoji);
+	get_optional(j, "party").get_to(a.party);
+	get_optional(j, "assets").get_to(a.assets);
+	get_optional(j, "secrets").get_to(a.secrets);
+	get_optional(j, "instance").get_to(a.instance);
+	get_optional(j, "flags").get_to(a.flags);
 }
 
 inline void to_json(nlohmann::json &j, const status_type &st) {
@@ -227,13 +227,71 @@ inline void to_json(nlohmann::json &j, const status_update &su) {
 }
 
 inline void from_json(const nlohmann::json &j, status_update &su) {
-	j["since"].get_to(su.since);
+	get_optional(j, "since").get_to(su.since);
 	j.at("status").get_to(su.status);
 	j.at("afk").get_to(su.afk);
 
-	if (!j["activities"].is_null()) {
+	if (!get_optional(j, "activities").is_null()) {
 		j.at("activities").get_to(su.activities);
 	}
+}
+
+inline void to_json(nlohmann::json &j, const user &u) {
+	j = {
+	    {"id", u.id},
+	    {"username", u.username},
+	    {"discriminator", u.discriminator},
+	    {"avatar", u.avatar},
+	    {"bot", u.bot},
+	    {"system", u.system},
+	    {"mfa_enabled", u.mfa_enabled},
+	    {"locale", u.locale},
+	    {"verified", u.verified},
+	    {"email", u.email},
+	    {"flags", u.flags},
+	    {"premium_type", u.premium_type},
+	    {"public_flags", u.public_flags},
+	};
+}
+
+inline void from_json(const nlohmann::json &j, user &u) {
+	j.at("id").get_to(u.id);
+	j.at("username").get_to(u.username);
+	j.at("discriminator").get_to(u.discriminator);
+	get_optional(j, "avatar").get_to(u.avatar);
+	get_optional(j, "bot").get_to(u.bot);
+	get_optional(j, "system").get_to(u.system);
+	get_optional(j, "mfa_enabled").get_to(u.mfa_enabled);
+	get_optional(j, "locale").get_to(u.locale);
+	get_optional(j, "verified").get_to(u.verified);
+	get_optional(j, "email").get_to(u.email);
+	get_optional(j, "flags").get_to(u.flags);
+	get_optional(j, "premium_type").get_to(u.premium_type);
+	get_optional(j, "public_flags").get_to(u.public_flags);
+}
+
+inline void to_json(nlohmann::json &j, const unavailable_guild &ug) {
+	j = {
+	    {"id", ug.id},
+	    {"unavailable", ug.unavailable},
+	};
+}
+
+inline void from_json(const nlohmann::json &j, unavailable_guild &ug) {
+	j.at("id").get_to(ug.id);
+	get_optional(j, "unavailable").get_to(ug.unavailable);
+}
+
+inline void to_json(nlohmann::json &j, const partial_application &pa) {
+	j = {
+	    {"id", pa.id},
+	    {"flags", pa.flags},
+	};
+}
+
+inline void from_json(const nlohmann::json &j, partial_application &pa) {
+	j.at("id").get_to(pa.id);
+	j.at("flags").get_to(pa.flags);
 }
 
 inline void to_json(nlohmann::json &j, const identify_connection_properties &icp) {
@@ -266,12 +324,26 @@ inline void to_json(nlohmann::json &j, const identify &i) {
 inline void from_json(const nlohmann::json &j, identify &i) {
 	j.at("token").get_to(i.token);
 	j.at("properties").get_to(i.properties);
-	j["compress"].get_to(i.compress);
-	j["large_treshold"].get_to(i.large_treshold);
-	j["shard"].get_to(i.shard);
-	j["presence"].get_to(i.presence);
-	j["guild_subscriptions"].get_to(i.guild_subscriptions);
+	get_optional(j, "compress").get_to(i.compress);
+	get_optional(j, "large_treshold").get_to(i.large_treshold);
+	get_optional(j, "shard").get_to(i.shard);
+	get_optional(j, "presence").get_to(i.presence);
+	get_optional(j, "guild_subscriptions").get_to(i.guild_subscriptions);
 	j.at("intents").get_to(i.intents);
+}
+
+inline void to_json(nlohmann::json &j, const resume &r) {
+	j = {
+	    {"token", r.token},
+	    {"session_id", r.session_id},
+	    {"seq", r.seq},
+	};
+}
+
+inline void from_json(const nlohmann::json &j, resume &r) {
+	j.at("token").get_to(r.token);
+	j.at("session_id").get_to(r.session_id);
+	j.at("seq").get_to(r.seq);
 }
 
 inline void to_json(nlohmann::json &j, const hello &h) {
@@ -284,6 +356,28 @@ inline void from_json(const nlohmann::json &j, hello &h) {
 	j.at("heartbeat_interval").get_to(h.heartbeat_interval);
 }
 
+inline void to_json(nlohmann::json &j, const ready &r) {
+	j = {
+	    {"v", r.v},
+	    {"user", r.user_info},
+	    {"private_channels", r.private_channels},
+	    {"guilds", r.guilds},
+	    {"session_id", r.session_id},
+	    {"shard", r.shard},
+	    {"application", r.application},
+	};
+}
+
+inline void from_json(const nlohmann::json &j, ready &r) {
+	j.at("v").get_to(r.v);
+	j.at("user").get_to(r.user_info);
+	j.at("private_channels").get_to(r.private_channels);
+	j.at("guilds").get_to(r.guilds);
+	j.at("session_id").get_to(r.session_id);
+	get_optional(j, "shard").get_to(r.shard);
+	j.at("application").get_to(r.application);
+}
+
 inline void to_json(nlohmann::json &j, const payload &p) {
 	j = {
 	    {"op", p.op},
@@ -292,6 +386,14 @@ inline void to_json(nlohmann::json &j, const payload &p) {
 	};
 
 	switch (p.op) {
+	case opcode::dispatch: {
+		if (p.t.has_value()) {
+			if (p.t.value() == event::ready) {
+				j["d"] = std::get<ready>(p.d);
+			}
+		}
+		break;
+	}
 	case opcode::heartbeat: {
 		int seq = std::get<int>(p.d);
 		if (seq < 0) {
@@ -309,18 +411,32 @@ inline void to_json(nlohmann::json &j, const payload &p) {
 		j["d"] = std::get<hello>(p.d);
 		break;
 	}
+	case opcode::resume: {
+		j["d"] = std::get<resume>(p.d);
+		break;
+	}
 	}
 }
 
 inline void from_json(const nlohmann::json &j, payload &p) {
 	j.at("op").get_to(p.op);
-	j["s"].get_to(p.s);
-	j["t"].get_to(p.t);
+	get_optional(j, "s").get_to(p.s);
+	get_optional(j, "t").get_to(p.t);
 
 	switch (p.op) {
+	case opcode::dispatch: {
+		if (p.t.has_value()) {
+			if (p.t.value() == event::ready) {
+				ready event_data;
+				j.at("d").get_to(event_data);
+				p.d = event_data;
+			}
+		}
+		break;
+	}
 	case opcode::heartbeat: {
 		int seq = -1;
-		if (!j["d"].is_null()) {
+		if (!get_optional(j, "d").is_null()) {
 			j.at("d").get_to(seq);
 		}
 		p.d = seq;
@@ -334,6 +450,12 @@ inline void from_json(const nlohmann::json &j, payload &p) {
 	}
 	case opcode::hello: {
 		hello event_data;
+		j.at("d").get_to(event_data);
+		p.d = event_data;
+		break;
+	}
+	case opcode::resume: {
+		resume event_data;
 		j.at("d").get_to(event_data);
 		p.d = event_data;
 		break;

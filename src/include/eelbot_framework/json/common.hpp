@@ -11,8 +11,6 @@
 
 namespace nlohmann {
 
-// JSON specialization for std::optional.
-
 template <typename T>
 struct adl_serializer<std::optional<T>> {
 	static void to_json(json &j, const std::optional<T> &opt) {
@@ -33,5 +31,19 @@ struct adl_serializer<std::optional<T>> {
 };
 
 } // namespace nlohmann
+
+namespace eelbot_framework {
+
+static const nlohmann::json null_json = nullptr;
+
+inline const nlohmann::json &get_optional(const nlohmann::json &j, const std::string &key) {
+	if (!j.contains(key)) {
+		return null_json;
+	}
+
+	return j.at(key);
+}
+
+} // namespace eelbot_framework
 
 #endif
