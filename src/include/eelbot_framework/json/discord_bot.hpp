@@ -221,7 +221,9 @@ inline void to_json(nlohmann::json &j, const status_update &su) {
 	    {"afk", su.afk},
 	};
 
-	if (!su.activities.empty()) {
+	if (su.activities.empty()) {
+		j["activities"] = nullptr;
+	} else {
 		j["activities"] = su.activities;
 	}
 }
@@ -396,7 +398,7 @@ inline void to_json(nlohmann::json &j, const payload &p) {
 	}
 	case opcode::heartbeat: {
 		int seq = std::get<int>(p.d);
-		if (seq < 0) {
+		if (seq > 0) {
 			j["d"] = seq;
 		} else {
 			j["d"] = nullptr;
