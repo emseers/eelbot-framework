@@ -104,7 +104,7 @@ install(FILES ${EF_DISCORD_BOT_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/
 if (EELBOT_FRAMEWORK_TESTS)
 	set(EF_TEST_NAME ${EF_LIB_NAME}_test)
 	include(cmake/catch.cmake)
-	file(GLOB_RECURSE EF_TESTS "${PROJECT_SOURCE_DIR}/test/*.cpp")
+	file(GLOB_RECURSE EF_TESTS "${PROJECT_SOURCE_DIR}/test/src/*.cpp")
 
 	add_executable(${EF_TEST_NAME} ${EF_SOURCES} ${EF_TESTS})
 	set_target_properties(${EF_TEST_NAME} PROPERTIES

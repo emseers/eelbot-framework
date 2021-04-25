@@ -31,3 +31,9 @@ You should be able to embed these in your top level project that also embeds Eel
 ## Usage
 
 Coming soon...
+
+## Running Tests
+
+If you would like to run the tests for Eelbot Framework, while building with CMake, pass in `-DEELBOT_FRAMEWORK_TESTS=True`. Once build, run the `eelbot_framework_test` executable.
+
+**Note:** The tests must be run from the root of the project directory since the paths for certain files they require are relative to it.

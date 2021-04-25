@@ -61,23 +61,21 @@ void zlib_inflate::push(const std::string &data) {
 
 		status_code = inflate(&(this->stream), Z_SYNC_FLUSH);
 
-		unsigned old_buf_size = buf_size;
-		buf_size              = this->chunk_size - this->stream.avail_out;
-
 		// If the stream end has been reached, reset the stream.
 		if (status_code == Z_STREAM_END) {
 			status_code = inflateReset(&(this->stream));
 		}
 
-		// If the buffer is full, flush it out to result and clear it.
+		// If the output buffer is full, flush it out to result and clear it.
+		buf_size = this->chunk_size - this->stream.avail_out;
 		if (buf_size == chunk_size) {
 			this->result.append(buf, buf_size);
 			buf_size = 0;
 			continue;
 		}
 
-		// If there was no change to the output buffer, flush it out to result and break.
-		if (buf_size == old_buf_size) {
+		// If the full input is processed, flush the output buffer out to result and break.
+		if (this->stream.avail_in == 0) {
 			this->result.append(buf, buf_size);
 			break;
 		}
