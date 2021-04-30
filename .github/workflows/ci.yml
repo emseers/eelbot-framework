@@ -1,0 +1,31 @@
+name: Continous Integration
+
+on:
+  pull_request:
+    branches:
+      - master
+      - dev
+  push:
+    branches:
+      - master
+      - dev
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Build unit tests
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          cmake --build .
+
+      # Run tests from root dir, since test/data isn't copied into build
+      - name: run_unit_tests
+        run: build/eelbot_framework_test -r junit
