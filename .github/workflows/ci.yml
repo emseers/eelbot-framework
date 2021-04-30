@@ -27,5 +27,10 @@ jobs:
           cmake --build .
 
       # Run tests from root dir, since test/data isn't copied into build
-      - name: run_unit_tests
-        run: build/eelbot_framework_test -r junit
+      - name: Run unit tests
+        run: build/eelbot_framework_test -r junit > unit_tests.xml
+
+      - name: Publish unit test results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          files: unit_tests.xml
