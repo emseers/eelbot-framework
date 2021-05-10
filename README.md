@@ -1,4 +1,5 @@
 # Eelbot Framework
+[![Continuous Integration](https://github.com/emseers/eelbot-framework/actions/workflows/ci.yml/badge.svg)](https://github.com/emseers/eelbot-framework/actions/workflows/ci.yml)
 
 Eelbot Framework is a discord bot framework that is designed for writing extensible bots.
 
